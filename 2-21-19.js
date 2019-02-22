@@ -105,7 +105,7 @@ let server = net.createServer(socket =>{
     logging.emit('writeStuff', `${name} has connected`);
     socket.on('data', (data)=>{
         if(data.toString().split(' ')[0] === '/w'){
-            console.log('entering if statement');
+            // console.log('entering if statement');
             data = data.toString();
             logging.emit('writeStuff', data);
             let split = data.split(' ');
@@ -132,15 +132,24 @@ let server = net.createServer(socket =>{
             let old = name;
             data = data.toString();
             logging.emit('writeStuff', data);
-            name = data.slice(10, data.length);
-            console.log(data.split(' ')[1]);
-            console.log(Boolean(data.split(' ')[1]));
-            if(theController.changeName(old, name) && data.split(' ')[1]){
+            let newName = data.slice(10, data.length).trim();
+            // console.log(data.split(' ')[1]);
+            // console.log(Boolean(data.split(' ')[1]));
+            if(!theController.checkForUser(newName) && data.split(' ')[1]){
+                theController.changeName(old, newName);
+                name = newName;
+                theController.on(`sendMessage${name}`, (theMessage)=>{
+                    socket.write(theMessage);
+                });
+                theController.on(`kick${name}`, ()=>{
+                    socket.write('You have been kicked');
+                    socket.destroy();
+                });
                 theController.sendToUsers(old, `${old} changed their username to ${name}`);
                 logging.emit('writeStuff', `${old} changed their username to ${name}`);
                 socket.write('You changed your username to ' + name);
             }
-            else if(theController.changeName(old, name) && !data.split(' '[1])){
+            else if(!theController.checkForUser(name) && !data.split(' '[1])){
                 logging.emit('writeStuff', name + ' did not enter a valid username to change to!');
                 socket.write('You did not enter a valid username to change to!');
             }
@@ -192,7 +201,7 @@ let server = net.createServer(socket =>{
         if(err.code === 'ECONNRESET'){
             theController.removeUser(name);
             logging.emit('writeStuff', `${name} Disconnected`);
-            theController.sendToUsers(name, `${name} Disconnected`);
+            theController.sendToAll(`${name} Disconnected`);
         }
         else{
             throw err;
@@ -201,12 +210,3 @@ let server = net.createServer(socket =>{
 }).listen(5000);
 
 console.log('server up, listening on port 5000');
-
-// server.on('error', (err)=>{
-//     if(err === 'ECONNRESET'){
-//         console.log('Client Disconnected');
-//     }
-//     else{
-//         throw err;
-//     }
-// });

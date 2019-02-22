@@ -1,3 +1,22 @@
-There are 1 clients connectedClient1, Client1 has connectedThere are 2 clients connectedClient1, Client2, Client2 has connected/w Client2 Hello
-Client1 whispers: Hello
-  to-Client2Client1 DisconnectedClient2 Disconnected
+There are 1 clients connectedClient1, Client1 has connectedThere are 2 clients connectedClient1, Client2, Client2 has connectedClient1: Hello
+/username JerecTharen
+Client1 changed their username to JerecTharenJerecTharen: hello
+Client2: hello
+Client2: again
+/w JerecTharen Hello THere
+Client2 whispers: Hello THere
+  to-JerecTharen/w Client2 General Kenobi!!
+JerecTharen whispers: General Kenobi!!
+  to-Client2/username GiladTharen
+Client2 changed their username to GiladTharenJerecTharen: Hello
+GiladTharen: This is where the fun begins
+/kick password GiladTharen
+GiladTharen has been kicked!There are 3 clients connectedJerecTharen, Client3, Client3 has connected/username MaldenTharen
+Client3 changed their username to MaldenTharenMaldenTharen: hello
+JerecTharen: /clientList
+JerecTharen, MaldenTharen, /username JerecThule
+JerecTharen changed their username to JerecThuleJerecThule: hello
+/w JerecThule
+The user does not exist/w JerecThule Hello THere
+MaldenTharen whispers: Hello THere
+  to-JerecThuleJerecThule DisconnectedMaldenTharen Disconnected
