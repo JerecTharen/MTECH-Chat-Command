@@ -1,0 +1,15 @@
+There are 1 clients connectedClient1, Client1 has connected/username    
+That name is already taken or is invalid/username JerecTharen
+   
+ changed their username to JerecTharen
+There are 2 clients connectedJerecTharen
+, Client2, Client2 has connected/username GiladTharen
+Client2 changed their username to GiladTharen
+/w GiladTharen
+JerecTharen
+ whispers: GiladTharen
+:  to-GiladTharen
+/w GiladTharen Hello
+The user does not existJerecTharen
+ DisconnectedGiladTharen
+ Disconnected
