@@ -18,6 +18,11 @@ class MessageController extends event{
             }
         }
     }
+    sendToAll(message){
+        for(let i = 0; i < this.users.length; i++){
+            this.emit(`sendMessage${this.users[i]}`, message);
+        }
+    }
     removeUser(user){
         for(let i = 0; i < this.users.length; i++){
             if(user === this.users[i]){
@@ -95,11 +100,11 @@ let server = net.createServer(socket =>{
     logging.emit('writeStuff', `There are ${numConnect} clients connected`);
     socket.write(`Welcome ${name}!`);
     logging.emit('writeStuff', theController.userList());
-    theController.sendToUsers(name, theController.userList());
+    theController.sendToAll(theController.userList());
     theController.sendToUsers(name, `${name} has connected`);
     logging.emit('writeStuff', `${name} has connected`);
     socket.on('data', (data)=>{
-        if(data.toString().slice(0,2) === '/w'){
+        if(data.toString().split(' ')[0] === '/w'){
             console.log('entering if statement');
             data = data.toString();
             logging.emit('writeStuff', data);
@@ -107,15 +112,14 @@ let server = net.createServer(socket =>{
             let result = '';
             if(theController.checkForUser(split[1])){
                 let sendName = split[1];
-                split[1] = split[1] + ':';
-                for(let i = 1; i < split.length; i++){
+                for(let i = 2; i < split.length; i++){
                     result += split[i] + ' ';
                 }
                 result = `${name} whispers: ${result}`;
                 logging.emit('writeStuff', `${result} to-${sendName}`);
                 theController.emit(`sendMessage${sendName}`, result);
             }
-            else if(!data.toString().split(' ')[2]){
+            else if(!data.toString().split(' ')[1]){
                 logging.emit('writeStuff', `${name} did not enter a valid whisper message`);
                 socket.write('You did not enter a valid whisper message');
             }
@@ -149,7 +153,10 @@ let server = net.createServer(socket =>{
             data = data.toString();
             logging.emit('writeStuff', data);
             let splits = data.split(' ');
-            if(splits[1] === password && splits[2] && splits[2] !== name){
+            // console.log(`Splits 2 is ${splits[2]} and name is: ${name}`);
+            // console.log(splits[2].trim() !== name);
+            // console.log(splits[2].trim() === name);
+            if(splits[1] === password && splits[2] && splits[2].trim() !== name){
                 // console.log('in if statement');
                 if(!theController.kickUser(splits[2])){
                     logging.emit('writeStuff', 'That user does not exist');
@@ -165,9 +172,9 @@ let server = net.createServer(socket =>{
                 logging.emit('writeStuff', `${name} entered an incorrect username to kick`);
             }
         }
-        else if(data.toString().split(' ')[0] === '/clientlist'){
+        else if(data.toString().trim() === '/clientlist'){
             logging.emit('writeStuff', theController.userList());
-            theController.sendToUsers(name, theController.userList());
+            theController.sendToAll(theController.userList());
         }
         else{
             logging.emit('writeStuff',`${name}: ${data.toString()}`);
